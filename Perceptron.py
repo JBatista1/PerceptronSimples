@@ -2,7 +2,7 @@ from sklearn import datasets
 from matplotlib import pyplot as plt
 import numpy as np
 from sklearn.utils import Bunch
-
+# Só pra testar
 class Perceptron:
     def __init__(self):
         iris = datasets.load_iris()
