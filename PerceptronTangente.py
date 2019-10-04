@@ -4,17 +4,15 @@ import numpy as np
 import random
 
 from matplotlib.colors import ListedColormap
-# Só pra testar
-class Perceptron:
+class PerceptronTangente:
     def __init__(self):
         iris = datasets.load_iris()
         self.X = iris.data
-        #segregating one class from the others, if target == 0, the new value is 0, if no is 1
         self.D = np.where(iris.target == 2, 0, 1)
         self.w = []
         for i in range(0, 5):
             if i == 0 :
-                self.w.append(-1)
+                self.w.append(0)
             else:
                 self.w.append(random.random())
         self.w = np.array(self.w)
@@ -27,11 +25,7 @@ class Perceptron:
             self.w = self.train(xTrain, dTrain, self.w)
             acurracy += self.validate(xValidate,dValidade)
         print("Media de acurracy is: ", acurracy/10)
-        # self.plot_decision_regions(self.X, self.D, classifier=self.w)
-        # plt.xlabel('sepal length [cm]')
-        # plt.ylabel('petal length [cm]')
-        # plt.legend(loc='upper left')
-        # plt.show()
+
     def addX1(self, xTrain):
         size = len(xTrain)
         ones = - np.ones((size, 1))
@@ -44,16 +38,12 @@ class Perceptron:
             error = False
             for i in range(len(xTrain)):
                 u = self.summationValuesMatrix(xTrain[i], w)
-                y = 0
-                if u <= 0:
-                    y = 0
-                else:
-                    y = 1
-
+                y = (1 - np.exp(-u)) / (1 + np.exp(-u))
                 if y != dtrain[i]:
                     err = dtrain[i] - y
+                    yline = 0.5 * (1 - (y*y))
                     for j in range(len(xTrain[i])-1):
-                        w[j] = w[j]+(learningRate * err * xTrain[i][j])
+                        w[j] = w[j]+(learningRate * err * yline * xTrain[i][j])
                     error = True
             num += 1
             if num > seasons or not error:
@@ -116,5 +106,5 @@ class Perceptron:
             plt.scatter(x=X[y == cl, 0], y=X[y == cl, 1],
                         alpha=0.8, c=cmap(idx),
                         marker=markers[idx], label=cl)
-teste = Perceptron()
+teste = PerceptronTangente()
 teste.main()
